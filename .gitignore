@@ -1,0 +1,34 @@
+# Build
+build/
+cmake-build-*/
+out/
+
+# IDE
+.vs/
+.vscode/
+.trae/
+.idea/
+*.user
+*.suo
+
+# Compiled
+*.obj
+*.o
+*.a
+*.lib
+*.exe
+*.dll
+*.so
+*.dylib
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+_deps/
+
+# OS
+.DS_Store
+Thumbs.db
+
