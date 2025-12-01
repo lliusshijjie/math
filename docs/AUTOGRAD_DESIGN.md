@@ -167,42 +167,42 @@ void Variable<T>::backward() {
 
 ## 5. 实现步骤
 
-### Step 1: 基础框架
-- [ ] `GradFn` 结构体
-- [ ] `VariableImpl` 结构体
-- [ ] `Variable` 类基础接口（构造、data、grad、requires_grad）
-- [ ] `backward()` 基础实现（无拓扑排序，单路径）
-- [ ] `zero_grad()`
+### Step 1: 基础框架 ✅
+- [x] `GradFn` 结构体
+- [x] `VariableImpl` 结构体
+- [x] `Variable` 类基础接口（构造、data、grad、requires_grad）
+- [x] `backward()` 实现（含拓扑排序）
+- [x] `zero_grad()`
 
-### Step 2: 基础运算
-- [ ] `operator+` 及其反向
-- [ ] `operator-` 及其反向
-- [ ] `operator*` (逐元素) 及其反向
-- [ ] `operator/` 及其反向
-- [ ] 标量运算版本
+### Step 2: 基础运算 ✅
+- [x] `operator+` 及其反向
+- [x] `operator-` 及其反向
+- [x] `operator*` (逐元素) 及其反向
+- [x] `operator/` 及其反向
+- [x] 标量运算版本
 
-### Step 3: 矩阵与归约
-- [ ] `matmul` 及其反向
-- [ ] `sum` 及其反向
-- [ ] `mean` 及其反向
-- [ ] `transpose` 及其反向
+### Step 3: 矩阵与归约 ✅
+- [x] `matmul` 及其反向
+- [x] `sum` 及其反向
+- [x] `mean` 及其反向
+- [x] `transpose` 及其反向
 
-### Step 4: 完善计算图
-- [ ] 拓扑排序（支持多路径DAG）
-- [ ] 梯度累积（同一变量被多次使用）
-- [ ] `detach()` 分离计算图
-- [ ] `no_grad` 上下文管理
+### Step 4: 完善计算图 ✅
+- [x] 拓扑排序（支持多路径DAG）
+- [x] 梯度累积（同一变量被多次使用）
+- [x] `detach()` 分离计算图
+- [ ] `no_grad` 上下文管理（可选扩展）
 
-### Step 5: 激活函数
-- [ ] `sigmoid` 及其反向
-- [ ] `tanh` 及其反向
-- [ ] `relu` 及其反向
-- [ ] `leaky_relu` 及其反向
-- [ ] `softmax` 及其反向
+### Step 5: 激活函数 ✅
+- [x] `sigmoid` 及其反向
+- [x] `tanh` 及其反向
+- [x] `relu` 及其反向
+- [x] `leaky_relu` 及其反向
+- [x] `softmax` (在cross_entropy中实现)
 
-### Step 6: 损失函数
-- [ ] `mse_loss` 及其反向
-- [ ] `cross_entropy_loss` 及其反向
+### Step 6: 损失函数 ✅
+- [x] `mse_loss` 及其反向
+- [x] `cross_entropy_loss` 及其反向
 
 ## 6. 文件结构
 

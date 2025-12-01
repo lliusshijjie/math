@@ -128,6 +128,14 @@ public:
         return data_[i * strides_[0] + j * strides_[1] + k * strides_[2]];
     }
 
+    // 4D access
+    [[nodiscard]] T& operator()(size_t i, size_t j, size_t k, size_t l) {
+        return data_[i * strides_[0] + j * strides_[1] + k * strides_[2] + l * strides_[3]];
+    }
+    [[nodiscard]] const T& operator()(size_t i, size_t j, size_t k, size_t l) const {
+        return data_[i * strides_[0] + j * strides_[1] + k * strides_[2] + l * strides_[3]];
+    }
+
     [[nodiscard]] T& operator()(const std::vector<size_t>& indices) {
         size_t offset = 0;
         for (size_t i = 0; i < indices.size(); ++i) {

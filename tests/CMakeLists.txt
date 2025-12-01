@@ -77,3 +77,15 @@ gtest_discover_tests(test_init)
 add_executable(test_tensor test_tensor.cpp)
 target_link_libraries(test_tensor PRIVATE math GTest::gtest_main)
 gtest_discover_tests(test_tensor)
+
+add_executable(test_autograd test_autograd.cpp)
+target_link_libraries(test_autograd PRIVATE math GTest::gtest_main)
+gtest_discover_tests(test_autograd)
+
+add_executable(test_optim test_optim.cpp)
+target_link_libraries(test_optim PRIVATE math GTest::gtest_main)
+gtest_discover_tests(test_optim)
+
+add_executable(test_conv test_conv.cpp)
+target_link_libraries(test_conv PRIVATE math GTest::gtest_main)
+gtest_discover_tests(test_conv)
