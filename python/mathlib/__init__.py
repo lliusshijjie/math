@@ -20,7 +20,8 @@ from ._mathlib import (
 
 from .nn_module import (
     Module, Linear, Sequential, ReLU, Sigmoid, Tanh,
-    BatchNorm1d, Dataset, TensorDataset, DataLoader
+    Dropout, Embedding, BatchNorm1d,
+    Dataset, TensorDataset, DataLoader
 )
 
 __version__ = "0.1.0"
@@ -39,6 +40,8 @@ __all__ = [
     "ReLU",
     "Sigmoid",
     "Tanh",
+    "Dropout",
+    "Embedding",
     "BatchNorm1d",
     "Dataset",
     "TensorDataset",

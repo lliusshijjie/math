@@ -105,6 +105,52 @@ class Tanh(Module):
         return nn.tanh_grad(x)
 
 
+class Dropout(Module):
+    """Dropout layer"""
+    def __init__(self, p=0.5):
+        super().__init__()
+        self.p = p
+
+    def forward(self, x):
+        if not self.training or self.p == 0:
+            return x
+
+        x_np = x.numpy()
+        mask = (np.random.random(x_np.shape) > self.p).astype(np.float64)
+        out_np = x_np * mask / (1 - self.p)
+
+        out_t = Tensor(list(x_np.shape), out_np.flatten().tolist())
+        return Variable(out_t, requires_grad=x.requires_grad)
+
+
+class Embedding(Module):
+    """Embedding layer: lookup table for integer indices"""
+    def __init__(self, num_embeddings, embedding_dim):
+        super().__init__()
+        self.num_embeddings = num_embeddings
+        self.embedding_dim = embedding_dim
+
+        # Initialize weights with normal distribution
+        weight_np = np.random.randn(num_embeddings, embedding_dim) * 0.1
+        self._parameters['weight'] = Variable(
+            Tensor([num_embeddings, embedding_dim], weight_np.flatten().tolist()),
+            requires_grad=True
+        )
+
+    def forward(self, x):
+        """x: integer indices tensor of shape (batch_size,) or (batch_size, seq_len)"""
+        indices = x.numpy().astype(int).flatten()
+        weight_np = self._parameters['weight'].numpy()
+
+        embedded = weight_np[indices]
+
+        # Reshape output
+        x_shape = list(x.numpy().shape)
+        out_shape = x_shape + [self.embedding_dim]
+        out_t = Tensor(out_shape, embedded.flatten().tolist())
+        return Variable(out_t, requires_grad=True)
+
+
 class BatchNorm1d(Module):
     """Batch Normalization for 1D inputs (N, C) or (N, C, L)"""
     def __init__(self, num_features, eps=1e-5, momentum=0.1):
