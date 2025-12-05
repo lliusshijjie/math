@@ -18,6 +18,8 @@ from ._mathlib import (
     optim,
 )
 
+from .nn_module import Module, Linear, Sequential, ReLU, Sigmoid, Tanh
+
 __version__ = "0.1.0"
 __all__ = [
     "Tensor",
@@ -28,5 +30,11 @@ __all__ = [
     "transpose",
     "nn",
     "optim",
+    "Module",
+    "Linear",
+    "Sequential",
+    "ReLU",
+    "Sigmoid",
+    "Tanh",
 ]
 
