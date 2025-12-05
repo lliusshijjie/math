@@ -43,6 +43,7 @@ void bind_autograd(py::module_& m) {
         .def("backward", &VariableD::backward)
         .def("zero_grad", &VariableD::zero_grad)
         .def("detach", &VariableD::detach)
+        .def("set_data", [](VariableD& v, const TensorD& t) { v.data() = t; })
         
         // Arithmetic operators
         .def("__add__", [](const VariableD& a, const VariableD& b) { return a + b; })
