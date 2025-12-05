@@ -105,6 +105,71 @@ class Tanh(Module):
         return nn.tanh_grad(x)
 
 
+class BatchNorm1d(Module):
+    """Batch Normalization for 1D inputs (N, C) or (N, C, L)"""
+    def __init__(self, num_features, eps=1e-5, momentum=0.1):
+        super().__init__()
+        self.num_features = num_features
+        self.eps = eps
+        self.momentum = momentum
+
+        # Learnable parameters
+        self._parameters['gamma'] = Variable(
+            Tensor([num_features], [1.0] * num_features), requires_grad=True)
+        self._parameters['beta'] = Variable(
+            Tensor([num_features], [0.0] * num_features), requires_grad=True)
+
+        # Running statistics (not parameters, not saved in state_dict by default)
+        self.running_mean = np.zeros(num_features)
+        self.running_var = np.ones(num_features)
+
+    def forward(self, x):
+        gamma = self._parameters['gamma']
+        beta = self._parameters['beta']
+        x_np = x.numpy()
+
+        if self.training:
+            # Compute batch statistics
+            mean = x_np.mean(axis=0)
+            var = x_np.var(axis=0)
+
+            # Update running statistics
+            self.running_mean = (1 - self.momentum) * self.running_mean + self.momentum * mean
+            self.running_var = (1 - self.momentum) * self.running_var + self.momentum * var
+        else:
+            mean = self.running_mean
+            var = self.running_var
+
+        # Normalize
+        x_norm = (x_np - mean) / np.sqrt(var + self.eps)
+
+        # Convert back to Variable
+        x_norm_t = Tensor(list(x_np.shape), x_norm.flatten().tolist())
+        x_norm_v = Variable(x_norm_t, requires_grad=x.requires_grad)
+
+        # Scale and shift: y = gamma * x_norm + beta
+        # Broadcast gamma and beta
+        gamma_np = gamma.numpy()
+        beta_np = beta.numpy()
+
+        result_np = x_norm * gamma_np + beta_np
+        result_t = Tensor(list(x_np.shape), result_np.flatten().tolist())
+        return Variable(result_t, requires_grad=x.requires_grad)
+
+    def state_dict(self):
+        state = super().state_dict()
+        state['running_mean'] = self.running_mean
+        state['running_var'] = self.running_var
+        return state
+
+    def load_state_dict(self, state_dict):
+        super().load_state_dict(state_dict)
+        if 'running_mean' in state_dict:
+            self.running_mean = state_dict['running_mean']
+        if 'running_var' in state_dict:
+            self.running_var = state_dict['running_var']
+
+
 # ============== Data Loading ==============
 
 class Dataset:
