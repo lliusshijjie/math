@@ -104,3 +104,67 @@ class Tanh(Module):
     def forward(self, x):
         return nn.tanh_grad(x)
 
+
+# ============== Data Loading ==============
+
+class Dataset:
+    """数据集基类"""
+    def __len__(self):
+        raise NotImplementedError
+
+    def __getitem__(self, idx):
+        raise NotImplementedError
+
+
+class TensorDataset(Dataset):
+    """从Tensor创建数据集"""
+    def __init__(self, *tensors):
+        self.tensors = tensors
+        self.size = tensors[0].shape[0] if tensors else 0
+
+    def __len__(self):
+        return self.size
+
+    def __getitem__(self, idx):
+        return tuple(self._slice(t, idx) for t in self.tensors)
+
+    def _slice(self, tensor, idx):
+        """提取单个样本"""
+        shape = list(tensor.shape)
+        if len(shape) == 1:
+            return Tensor([1], [tensor.numpy()[idx]])
+        new_shape = shape[1:]
+        data = tensor.numpy()[idx].flatten().tolist()
+        return Tensor(new_shape, data)
+
+
+class DataLoader:
+    """数据加载器"""
+    def __init__(self, dataset, batch_size=1, shuffle=False):
+        self.dataset = dataset
+        self.batch_size = batch_size
+        self.shuffle = shuffle
+
+    def __len__(self):
+        return (len(self.dataset) + self.batch_size - 1) // self.batch_size
+
+    def __iter__(self):
+        indices = list(range(len(self.dataset)))
+        if self.shuffle:
+            np.random.shuffle(indices)
+
+        for start in range(0, len(indices), self.batch_size):
+            batch_indices = indices[start:start + self.batch_size]
+            batch = [self.dataset[i] for i in batch_indices]
+
+            # 合并batch
+            num_tensors = len(batch[0])
+            result = []
+            for i in range(num_tensors):
+                arrays = [item[i].numpy() for item in batch]
+                stacked = np.stack(arrays, axis=0)
+                t = Tensor(list(stacked.shape), stacked.flatten().tolist())
+                result.append(Variable(t, requires_grad=False))
+
+            yield tuple(result)
+

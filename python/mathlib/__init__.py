@@ -18,7 +18,10 @@ from ._mathlib import (
     optim,
 )
 
-from .nn_module import Module, Linear, Sequential, ReLU, Sigmoid, Tanh
+from .nn_module import (
+    Module, Linear, Sequential, ReLU, Sigmoid, Tanh,
+    Dataset, TensorDataset, DataLoader
+)
 
 __version__ = "0.1.0"
 __all__ = [
@@ -36,5 +39,8 @@ __all__ = [
     "ReLU",
     "Sigmoid",
     "Tanh",
+    "Dataset",
+    "TensorDataset",
+    "DataLoader",
 ]
 
